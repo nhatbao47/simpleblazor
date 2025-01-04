@@ -1,0 +1,32 @@
+﻿<nav class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="navbar-brand">
+            <img width="40" alt="Vue Logo" src="/blazor.svg" class="mx-1" />
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <NavLink href="/dashboard" class="nav-link">Dashboard</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/users" class="nav-link">Users</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/schedules" class="nav-link">Schedules</NavLink>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Administrator
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#" @click.prevent="logout">Logout</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/login">Login</NavLink>
+                </li>
+            </ul>
+        </div>
+    </nav>

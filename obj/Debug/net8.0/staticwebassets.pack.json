@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/obj/Debug/net8.0/scopedcss/projectbundle/SimpleBlazor.bundle.scp.css",
+      "PackagePath": "staticwebassets/SimpleBlazor.bundle.scp.css"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/base.css",
+      "PackagePath": "staticwebassets/base.css"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/blazor.svg",
+      "PackagePath": "staticwebassets/blazor.svg"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/favicon.png",
+      "PackagePath": "staticwebassets/favicon.png"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/img/avatar.png",
+      "PackagePath": "staticwebassets/img/avatar.png"
+    },
+    {
+      "Id": "/Users/giau/Desktop/Tech/SimpleBlazor/wwwroot/img/user-icon.jpg",
+      "PackagePath": "staticwebassets/img/user-icon.jpg"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.SimpleBlazor.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.SimpleBlazor.props",
+      "PackagePath": "build\\SimpleBlazor.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.SimpleBlazor.props",
+      "PackagePath": "buildMultiTargeting\\SimpleBlazor.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.SimpleBlazor.props",
+      "PackagePath": "buildTransitive\\SimpleBlazor.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

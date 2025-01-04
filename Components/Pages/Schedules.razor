@@ -1,0 +1,46 @@
+@page "/schedules"
+
+<PageTitle>Schedules</PageTitle>
+
+<div class="button-group mb-2">
+    <NavLink href="" class="btn btn-sm btn-custom">
+        <i class="fa fa-calendar-o"></i> Add
+    </NavLink>
+    <button class="btn btn-sm btn-outline-secondary">
+        <i class="fa fa-eraser"></i> Clear filter
+    </button>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col"><i class="fa fa-text-width"></i> Title</th>
+            <th scope="col"><i class="fa fa-user"></i> Creator</th>
+            <th scope="col"><i class="fa fa-paragraph"></i> Description</th>
+            <th scope="col"><i class="fa fa-map-marker"></i> Location</th>
+            <th scope="col"><i class="fa fa-calendar-o"></i> Date</th>
+            <th scope="col"><i class="fa fa-clock-o"></i> Time</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>schedule.title</td>
+            <td>schedule.creator</td>
+            <td>schedule.description</td>
+            <td>schedule.location</td>
+            <td>$formatDate(schedule.date)</td>
+            <td>schedule.startTime ~ schedule.endTime</td>
+            <td>
+                <NavLink href="" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-info-circle"></i> Details
+                </NavLink>
+                <NavLink href="" class="btn btn-sm btn-primary">
+                    <i class="fa fa-pencil"></i> Edit
+                </NavLink>
+                <button type="button" class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,20 @@
+<div class="card">
+    @HeaderContent
+    <div class="card-body py-0">
+        <ul class="list-group list-group-flush">
+            @BodyContent
+            @FooterContent
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? HeaderContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? BodyContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? FooterContent { get; set; }
+}

@@ -1,0 +1,21 @@
+<EditableTasks>
+    <HeaderContent>
+        <div class="card-header text-primary">
+            <h5 class="mb-0">
+                New Tasks<i class="fa fa-thumb-tack right-icon"></i>
+            </h5>
+        </div>
+    </HeaderContent>
+    <BodyContent>
+        <li class="list-group-item px-0">
+            <NavLink class="task-link">{{ task.title }}</NavLink>
+        </li>
+    </BodyContent>
+    <FooterContent>
+        <li class="list-group-item px-0">
+            <NavLink href="/task/0" class="btn btn-sm btn-primary">
+                <i class="fa fa-tasks"></i> Add
+            </NavLink>
+        </li>
+    </FooterContent>
+</EditableTasks>

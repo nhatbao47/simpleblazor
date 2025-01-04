@@ -1,0 +1,8 @@
+.card-body a.task-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-body a.task-link:hover {
+    text-decoration: underline;
+}
