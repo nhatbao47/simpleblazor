@@ -1,3 +1,4 @@
+@rendermode InteractiveServer
 <EditableTasks>
     <HeaderContent>
         <div class="card-header text-secondary">
@@ -7,9 +8,23 @@
         </div>
     </HeaderContent>
     <BodyContent>
-        <li class="list-group-item px-0" v-if="tasks">
-            <button class="btn btn-link text-dark border-0 p-0">{{ task.title }}</button>
-        </li>
+        @if (Tasks != null && Tasks.Count > 0)
+        {
+            foreach (var task in Tasks)
+            {
+                <li class="list-group-item px-0">
+                    <button @onclick="(() => ShowPreview(task))" class="btn btn-link text-dark border-0 p-0">@task.Title</button>
+                </li>
+            }
+        }
     </BodyContent>
 </EditableTasks>
-<TaskPreview />
+<TaskPreview Task="SelectedTask" />
+
+@code {
+    private SimpleTask SelectedTask;
+
+    [Parameter]
+    public List<SimpleTask> Tasks { get; set; }
+    private void ShowPreview(SimpleTask task) => SelectedTask = task;
+}

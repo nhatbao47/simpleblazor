@@ -7,15 +7,26 @@
         </div>
     </HeaderContent>
     <BodyContent>
-        <li class="list-group-item px-0">
-            <NavLink class="task-link">{{ task.title }}</NavLink>
-        </li>
+        @if (Tasks != null && Tasks.Count > 0)
+        {
+            foreach (var task in Tasks)
+            {
+                <li class="list-group-item px-0">
+                    <NavLink href="@($"/dashboard/task/{task.Id}")" class="task-link">@task.Title</NavLink>
+                </li>
+            }
+        }
     </BodyContent>
     <FooterContent>
         <li class="list-group-item px-0">
-            <NavLink href="/task/0" class="btn btn-sm btn-primary">
+            <NavLink href="/dashboard/task/0" class="btn btn-sm btn-primary">
                 <i class="fa fa-tasks"></i> Add
             </NavLink>
         </li>
     </FooterContent>
 </EditableTasks>
+
+@code {
+    [Parameter]
+    public List<SimpleTask> Tasks {get;set;}
+}
