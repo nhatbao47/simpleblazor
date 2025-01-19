@@ -1,5 +1,6 @@
-form.login-form {
+.login-form {
     border: 3px solid #f1f1f1;
+    padding-bottom: 5px;
 }
 
 .login-form input[type="text"],

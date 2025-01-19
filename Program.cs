@@ -1,12 +1,19 @@
 using SimpleBlazor.Components;
+using SimpleBlazor.Services.ApiClient;
+using SimpleBlazor.Services.Configuration;
+using SimpleBlazor.Services.GenericService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-    
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddHttpClient<IApiClient, ApiClient>();
+builder.Services.AddSingleton<TaskService>();
 
 var app = builder.Build();
 

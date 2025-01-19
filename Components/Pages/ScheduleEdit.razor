@@ -1,0 +1,77 @@
+@page "/schedules/{Id:int}/edit"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<PageTitle>Schedule Composer</PageTitle>
+
+<div class="card bg-light">
+    <div class="card-header fw-bold">Schedule Composer</div>
+    <div class="card-body">
+        <form>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Title</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="title" maxlength="200" required />
+                </div>
+            </div>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Creator</label>
+                <div class="col-md-4">
+                    <select class="form-select" name="userId" required>
+                        <option>{{ user.fullName }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Description</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                </div>
+            </div>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Location</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="location" maxlength="100" required />
+                </div>
+            </div>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Date</label>
+                <div class="col-md-2">
+                    <DateInput TValue="DateOnly" @bind-Value="@date1" Placeholder="Enter a date"/>
+                </div>
+            </div>
+            <div class="form-group row required">
+                <label class="col-md-2 col-form-label">Time</label>
+                <div class="col-md-3">
+                    <div class="d-flex flex-row">
+                        <TimeInput TValue="TimeOnly" @bind-Value="@startTime" />
+                        <span class="mx-2 mt-2">~</span>
+                        <TimeInput TValue="TimeOnly" @bind-Value="@endTime" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                    <button type="button" @onclick="GoBack" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa fa-ban"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private void GoBack() => Navigation.NavigateTo("/schedules");
+
+    private DateOnly date1 = DateOnly.FromDateTime(DateTime.Now);
+    private TimeOnly startTime = new TimeOnly(10, 30);
+    private TimeOnly endTime = new TimeOnly(11, 30);
+}

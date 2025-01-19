@@ -1,0 +1,58 @@
+@page "/task/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<PageTitle>Task Composer</PageTitle>
+
+<div class="">
+    <p>
+        <button type="button" @onclick="GoBack" class="btn btn-sm btn-danger">
+            <i class="fa fa-arrow-circle-o-left"></i> Back
+        </button>
+    </p>
+    <div class="border rounded p-2">
+        <form>
+            <input type="hidden" id="id" name="id" />
+            <div class="form-group">
+                <label htmlFor="title" class="form-label fw-bold">Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Insert the title..."
+                    maxlength="200" required />
+            </div>
+            <div class="form-group">
+                <label htmlFor="description" class="form-label fw-bold">
+                    Description
+                </label>
+                <textarea class="form-control" id="description" name="description" :rows="3"
+                    placeholder="Insert suitable description..." maxlength="1000" required></textarea>
+            </div>
+            <div class="form-group">
+                <h6 class="fw-bold">Status</h6>
+                <div>
+                    <div className="form-check form-check-inline">
+                        <input type="radio" />
+                        <label for="">{{ radio.label }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-2">
+                <p class="spacer">&nbsp;</p>
+                <button type="button" @onclick="GoBack" class="btn btn-sm btn-outline-secondary btn-right">
+                    <i class="fa fa-ban"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-sm btn-primary btn-right">
+                    <i class="fa fa-save"></i> {{ addNew ? 'Save' : 'Update' }}
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-right">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id {get;set;}
+
+    private void GoBack() => Navigation.NavigateTo("/dashboard");
+}
