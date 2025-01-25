@@ -84,14 +84,14 @@ public class ApiClient: IApiClient
         }
     }
 
-    public async Task<T> UpdateAsync<T>(string url, T model)
+
+    public async Task<bool> UpdateAsync<T>(string url, T model)
     {
         try
         {
             var response = await _httpClient.PutAsJsonAsync(url, model);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>()
-                ?? throw new ApplicationException("he response content was empty.");
+            return response.IsSuccessStatusCode;
         }
         catch(Exception ex)
         {

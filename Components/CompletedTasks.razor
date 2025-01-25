@@ -22,9 +22,9 @@
 <TaskPreview Task="SelectedTask" />
 
 @code {
-    private SimpleTask SelectedTask;
+    private TaskModel SelectedTask;
 
     [Parameter]
-    public List<SimpleTask> Tasks { get; set; }
-    private void ShowPreview(SimpleTask task) => SelectedTask = task;
+    public List<TaskModel> Tasks { get; set; }
+    private void ShowPreview(TaskModel task) => SelectedTask = task;
 }

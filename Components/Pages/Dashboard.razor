@@ -1,7 +1,6 @@
 @page "/dashboard"
 @rendermode InteractiveServer
-@using SimpleBlazor.Services.GenericService
-@inject TaskService TaskService;
+@inject TaskService TaskService
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -32,10 +31,10 @@ else
 </div>
 }
 @code {
-    private List<SimpleTask> tasks;
-    private List<SimpleTask> newTasks;
-    private List<SimpleTask> inprogressTasks;
-    private List<SimpleTask> completedTasks;
+    private List<TaskModel> tasks;
+    private List<TaskModel> newTasks;
+    private List<TaskModel> inprogressTasks;
+    private List<TaskModel> completedTasks;
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
@@ -44,13 +43,13 @@ else
         {
             tasks = await TaskService.GetTasksAsync();
             newTasks = tasks.Where(d => d.State == TaskState.New).ToList();
-            inprogressTasks = tasks.Where(d => d.State == TaskState.Inprogress).ToList();
+            inprogressTasks = tasks.Where(d => d.State == TaskState.InProgress).ToList();
             completedTasks = tasks.Where(d => d.State == TaskState.Done).ToList();
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Failed to load tasks: {ex.Message}");
-            tasks = new List<SimpleTask>();
+            tasks = new List<TaskModel>();
         }
         finally
         {

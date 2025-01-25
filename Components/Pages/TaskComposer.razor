@@ -1,6 +1,8 @@
 @page "/dashboard/task/{id:int}"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
+@inject TaskService TaskService
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Task Composer</PageTitle>
 
@@ -11,48 +13,142 @@
         </button>
     </p>
     <div class="border rounded p-2">
-        <form>
-            <input type="hidden" id="id" name="id" />
-            <div class="form-group">
-                <label htmlFor="title" class="form-label fw-bold">Title</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="Insert the title..."
-                    maxlength="200" required />
+        @if (taskModel == null)
+        {
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
-            <div class="form-group">
-                <label htmlFor="description" class="form-label fw-bold">
-                    Description
-                </label>
-                <textarea class="form-control" id="description" name="description" :rows="3"
-                    placeholder="Insert suitable description..." maxlength="1000" required></textarea>
-            </div>
-            <div class="form-group">
-                <h6 class="fw-bold">Status</h6>
-                <div>
-                    <div className="form-check form-check-inline">
-                        <input type="radio" />
-                        <label for="">{{ radio.label }}</label>
+        }
+        else
+        {
+            <EditForm Model="taskModel" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit" FormName="TaskForm">
+                <div class="alert alert-danger" role="alert"
+                    style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
+                    @errorMessage
+                </div>
+
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <input type="hidden" name="id" @bind-value="taskModel!.Id" />
+                <div class="form-group">
+                    <label htmlFor="title" class="form-label fw-bold">Title</label>
+                    <InputText class="form-control" name="title" @bind-Value="taskModel!.Title"
+                        placeholder="Insert the title..." maxlength="200" />
+                </div>
+                <div class="form-group">
+                    <label htmlFor="description" class="form-label fw-bold">
+                        Description
+                    </label>
+                    <InputTextArea class="form-control" name="description" @bind-Value="taskModel!.Description" rows="3"
+                        placeholder="Insert suitable description..." maxlength="1000" />
+                </div>
+                <div class="form-group">
+                    <h6 class="fw-bold">Status</h6>
+                    <div>
+                        <InputRadioGroup @bind-Value="taskModel!.State">
+                            @foreach (var option in stateEnums)
+                            {
+                                TaskState enumInfo = (TaskState)Enum.Parse(typeof(TaskState), option.ToString());
+                                <div class="form-check form-check-inline">
+                                    <InputRadio class="form-check-input" id="@option" Value="@enumInfo" />
+                                    <label class="form-check-label" for="@option">@option</label>
+                                </div>
+                            }
+                        </InputRadioGroup>
                     </div>
                 </div>
-            </div>
-            <div class="form-group mt-2">
-                <p class="spacer">&nbsp;</p>
-                <button type="button" @onclick="GoBack" class="btn btn-sm btn-outline-secondary btn-right">
-                    <i class="fa fa-ban"></i> Cancel
-                </button>
-                <button type="submit" class="btn btn-sm btn-primary btn-right">
-                    <i class="fa fa-save"></i> {{ addNew ? 'Save' : 'Update' }}
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-right">
-                    <i class="fa fa-trash"></i> Delete
-                </button>
-            </div>
-        </form>
+                <div class="form-group mt-2">
+                    <p class="spacer">&nbsp;</p>
+                    <button type="button" @onclick="GoBack" class="btn btn-sm btn-outline-secondary btn-right">
+                        <i class="fa fa-ban"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary btn-right">
+                        <i class="fa fa-save"></i> @(addNew ? "Save" : "Update")
+                    </button>
+                    @if (!addNew)
+                    {
+                        <button type="button" @onclick="HandleDelete" class="btn btn-sm btn-outline-danger btn-right">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    }
+                    
+                </div>
+            </EditForm>
+        }
     </div>
 </div>
 
 @code {
+    [SupplyParameterFromForm]
+    private TaskModel? taskModel { get; set; }
+    private Array stateEnums = Enum.GetValues(typeof(TaskState));
+    private bool addNew = false;
+    private string errorMessage = string.Empty;
     [Parameter]
-    public int Id {get;set;}
+    public int Id { get; set; }
 
     private void GoBack() => Navigation.NavigateTo("/dashboard");
+
+    private void HandleInvalidSubmit()
+    {
+        errorMessage = "Please correct the highlighted errors and try again.";
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            if (addNew)
+            {
+                await TaskService.CreateTaskAsync(taskModel);
+            }
+            else
+            {
+                await TaskService.UpdateTaskAsync(taskModel);
+            }
+
+            GoBack();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to save task: {ex.Message}";
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        try
+        {
+            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{taskModel.Title}' task?");
+            if (!confirmed) return;
+            await TaskService.DeleteTaskAsync(taskModel.Id);
+            GoBack();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to delete task: {ex.Message}";
+        }
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        addNew = Id == 0;
+
+        if (addNew)
+        {
+            taskModel = new TaskModel();
+        }
+        else
+        {
+            try
+            {
+                taskModel = await TaskService.GetTaskByIdAsync(Id);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to load task: {ex.Message}");
+            }
+        }
+    }
 }

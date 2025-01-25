@@ -25,7 +25,7 @@
 @code {
     private bool IsVisible = false;
     [Parameter]
-    public SimpleTask Task { get; set; }
+    public TaskModel Task { get; set; }
 
     private void HidePreview() => IsVisible = false;
     protected override void OnParametersSet() => IsVisible = true;

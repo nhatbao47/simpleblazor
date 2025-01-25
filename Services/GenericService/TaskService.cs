@@ -14,11 +14,11 @@ public class TaskService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<List<SimpleTask>> GetTasksAsync()
+    public async Task<List<TaskModel>> GetTasksAsync()
     {
         try
         {
-            var tasks = await _apiClient.GetAllAsync<SimpleTask>(Resource);
+            var tasks = await _apiClient.GetAllAsync<TaskModel>(Resource);
             return tasks ?? [];
         }
         catch (ApplicationException ex)
@@ -33,11 +33,11 @@ public class TaskService
         }
     }
 
-    public async Task<SimpleTask> GetTaskByIdAsync(int id)
+    public async Task<TaskModel> GetTaskByIdAsync(int id)
     {
         try
         {
-            var task = await _apiClient.GetByIdAsync<SimpleTask>(Resource, id);
+            var task = await _apiClient.GetByIdAsync<TaskModel>(Resource, id);
             return task;
         }
         catch (ApplicationException ex)
@@ -52,7 +52,7 @@ public class TaskService
         }
     }
 
-    public async Task<SimpleTask> CreateTaskAsync(SimpleTask newTask)
+    public async Task<TaskModel> CreateTaskAsync(TaskModel newTask)
     {
         try
         {
@@ -71,12 +71,11 @@ public class TaskService
         }
     }
 
-    public async Task<SimpleTask> UpdateTaskAsync(SimpleTask updatedTask)
+    public async Task<bool> UpdateTaskAsync(TaskModel updatedTask)
     {
         try
         {
-            var task = await _apiClient.UpdateAsync(Resource, updatedTask);
-            return task;
+            return await _apiClient.UpdateAsync($"{Resource}/{updatedTask.Id}", updatedTask);
         }
         catch (ApplicationException ex)
         {
