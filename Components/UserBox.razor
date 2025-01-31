@@ -1,17 +1,26 @@
+@rendermode InteractiveServer
+@inject IJSRuntime JsRuntime
+
 <div class="card card-custom mb-4">
-    <form>
+    <EditForm Model="formData" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
+        <DataAnnotationsValidator />
+
         <div class="card-header text-center">
-            <h6 class="my-2" v-if="!isEditing">
-                <i class="fa fa-user"></i> {{formData.fullName}}
+            <h6 class="my-2 @GetLabelCssClass()">
+                <i class="fa fa-user"></i> @formData.FullName
             </h6>
-            <input type="text" class="form-control" name="name" maxlength="200" v-if="isEditing" required />
+            <InputText class="@($"form-control {GetInputCssClass()}")" name="name" @bind-Value="formData.FullName"
+                maxlength="200" />
+            <ValidationMessage For="@(() => formData.FullName)" />
         </div>
         <div class="card-body text-center">
             <p class="my-0">
                 <img src="/img/user-icon.jpg" width="200" alt="" />
             </p>
-            <p>{{formData.title}}</p>
-            <input type="text" class="form-control mt-2" name="title" maxlength="100" required />
+            <p class="@GetLabelCssClass()">@formData.Title</p>
+            <InputText class="@($"form-control mt-2 {GetInputCssClass()}")" name="title" @bind-Value="formData.Title"
+                maxlength="100" />
+            <ValidationMessage For="@(() => formData.Title)" />
             <p class="mt-3 mb-2">
                 <NavLink class="btn btn-sm btn-custom">
                     <i class="fa fa-calendar-check-o"></i> Schedules
@@ -19,18 +28,65 @@
             </p>
         </div>
         <div class="card-footer text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success">
+            <button type="submit" class="btn btn-sm btn-outline-success @GetInputCssClass()">
                 <i class="fa fa-save"></i> Update
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">
+            <button type="button" @onclick="CancelEditing" class="btn btn-sm btn-outline-secondary @GetInputCssClass()">
                 <i class="fa fa-ban"></i> Cancel
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">
+            <button type="button" @onclick="@(() => isEditing = true)" class="btn btn-sm btn-outline-secondary @GetLabelCssClass()">
                 <i class="fa fa-pencil"></i> Edit
             </button>
-            <button type="button" class="btn btn-sm btn-danger">
+            <button type="button" @onclick="HandleDelete" class="btn btn-sm btn-danger @GetLabelCssClass()">
                 <i class="fa fa-times"></i> Remove
             </button>
         </div>
-    </form>
+    </EditForm>
 </div>
+
+@code {
+    private UserModel formData { get; set; }
+    private bool isEditing = false;
+    [Parameter]
+    public UserModel Item { get; set; }
+
+    private string GetInputCssClass() => isEditing ? "" : "hidden";
+    private string GetLabelCssClass() => isEditing ? "hidden" : "";
+
+    private void CancelEditing()
+    {
+        isEditing = false;
+        formData = (UserModel)Item.Clone();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        isEditing = false;
+        await OnUserUpdated.InvokeAsync(formData);
+    }
+
+    private async Task HandleDelete()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{formData.FullName}' user?");
+        if (!confirmed) return;
+        await OnUserDeleted.InvokeAsync(formData.Id);
+    }
+
+    protected override void OnInitialized()
+    {
+        if (Item != null)
+        {
+            formData = (UserModel)Item.Clone();
+        }
+        else
+        {
+            formData = new UserModel();
+        }
+    }
+
+    [Parameter]
+    public EventCallback<int> OnUserDeleted {get;set;}
+    
+    [Parameter]
+    public EventCallback<UserModel> OnUserUpdated { get; set;}
+}

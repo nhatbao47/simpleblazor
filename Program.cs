@@ -14,6 +14,7 @@ builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSet
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddHttpClient<IApiClient, ApiClient>();
 builder.Services.AddSingleton<TaskService>();
+builder.Services.AddSingleton<UserService>();
 
 var app = builder.Build();
 
