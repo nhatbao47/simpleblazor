@@ -26,10 +26,10 @@ public class UserService
             _logger.LogError(ex, "Error occurred while fetching users.");
             return [];
         }
-        catch ( Exception ex )
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error occurred while fetching users.");
-            return  [];
+            return [];
         }
     }
 

@@ -4,6 +4,8 @@
 
 <PageTitle>Users</PageTitle>
 
+<Toasts Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 <div class="button-group">
     <button type="button" class="btn btn-sm btn-custom">
         <i class="fa fa-user-plus"></i> Add
@@ -15,32 +17,32 @@
 
 @if (isLoading)
 {
-    <div class="text-center">
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
-</div>
 }
 else if (users == null || users.Count == 0)
 {
-    <p>No users found.</p>
+        <p>No users found.</p>
 }
 else
 {
-    <div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
+        <div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
         @errorMessage
-    </div>
-    <div class="row">
+        </div>
+        <div class="row">
     @foreach (var user in users)
         {
-            <div class="col-md-3">
-                <UserBox Item="user" OnUserUpdated="UserUpdated" OnUserDeleted="UserDeleted" />
-            </div>
+                    <div class="col-md-3">
+                        <UserBox Item="user" OnUserUpdated="UserUpdated" OnUserDeleted="UserDeleted" />
+                    </div>
         }
-        <div class="col-md-3">
-            <NewUser />
+            <div class="col-md-3">
+                <NewUser />
+            </div>
         </div>
-    </div>
 }
 
 @code
@@ -48,6 +50,7 @@ else
     private bool isLoading = true;
     private string errorMessage = string.Empty;
     private List<UserModel> users;
+    private List<ToastMessage> messages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,6 +74,13 @@ else
         try
         {
             await UserService.UpdateUserAsync(user);
+            var index = users.FindIndex(d => d.Id == user.Id);
+            if (index > -1)
+            {
+                users[index] = user;
+            }
+
+            ShowMessage("The user has been updated!");
         }
         catch (Exception ex)
         {
@@ -84,10 +94,21 @@ else
         {
             await UserService.DeleteUserAsync(Id);
             users = users.Where(d => d.Id != Id).ToList();
+            ShowMessage("The user has been deleted!");
         }
         catch (Exception ex)
         {
             errorMessage = $"Failed to delete task: {ex.Message}";
         }
     }
+
+    private void ShowMessage(string message) => messages.Add(CreateToastMessage(message));
+
+    private ToastMessage CreateToastMessage(string message)
+    => new ToastMessage
+        {
+            Type = ToastType.Success,
+            AutoHide = true,
+            Message = message
+        };
 }
