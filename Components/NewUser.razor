@@ -1,18 +1,45 @@
+@rendermode InteractiveServer
+
 <div class="card card-custom mb-4">
-    <form>
+    <EditForm Model="formData" OnValidSubmit="HandleValidSubmit" FormName="UserForm">
+        <DataAnnotationsValidator />
+
         <div class="card-header text-center">
-            <input type="text" class="form-control" id="name" name="name" maxlength="200" required />
+            <InputText class="form-control" name="name" @bind-Value="formData.FullName"
+                maxlength="200" />
+            <ValidationMessage For="@(() => formData.FullName)" />
         </div>
         <div class="card-body text-center">
             <p class="my-0">
                 <img src="/img/user-icon.jpg" width="200" alt="" />
             </p>
-            <input type="text" class="form-control mt-2" id="title" name="title" maxlength="100" required />
+            <InputText class="form-control mt-2" name="title" @bind-Value="formData.Title"
+                maxlength="100" />
+            <ValidationMessage For="@(() => formData.Title)" />
             <p class="mb-1">&nbsp;</p>
         </div>
         <div class="card-footer text-center">
             <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus"></i>
                 Create</button>
         </div>
-    </form>
+    </EditForm>
 </div>
+
+@code
+{
+    private UserModel formData { get; set; }
+
+    [Parameter]
+    public EventCallback<UserModel> OnUserAdded {get;set;}
+
+    private async Task HandleValidSubmit()
+    {
+        await OnUserAdded.InvokeAsync(formData);
+        formData = new UserModel();
+    }
+
+    protected override void OnInitialized()
+    {
+        formData = new UserModel();
+    }
+}

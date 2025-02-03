@@ -33,6 +33,25 @@ public class UserService
         }
     }
 
+    public async Task<UserModel> CreateUserAsync(UserModel newUser)
+    {
+        try
+        {
+            var createdUser = await _apiClient.InsertAsync<UserModel>(_resource, newUser);
+            return createdUser;
+        }
+        catch (ApplicationException ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating a new user.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while creating a new user.");
+            throw;
+        }
+    }
+
     public async Task<bool> UpdateUserAsync(UserModel updatedUser)
     {
         try

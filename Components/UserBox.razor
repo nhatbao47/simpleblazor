@@ -6,21 +6,33 @@
         <DataAnnotationsValidator />
 
         <div class="card-header text-center">
-            <h6 class="my-2 @GetLabelCssClass()">
-                <i class="fa fa-user"></i> @formData.FullName
-            </h6>
-            <InputText class="@($"form-control {GetInputCssClass()}")" name="name" @bind-Value="formData.FullName"
-                maxlength="200" />
-            <ValidationMessage For="@(() => formData.FullName)" />
+            @if (isEditing)
+            {
+                <InputText class="form-control" name="name" @bind-Value="formData.FullName"
+                    maxlength="200" />
+                <ValidationMessage For="@(() => formData.FullName)" />
+            }
+            else
+            {
+                <h6 class="my-2">
+                    <i class="fa fa-user"></i> @formData.FullName
+                </h6>
+            }
         </div>
         <div class="card-body text-center">
             <p class="my-0">
                 <img src="/img/user-icon.jpg" width="200" alt="" />
             </p>
-            <p class="@GetLabelCssClass()">@formData.Title</p>
-            <InputText class="@($"form-control mt-2 {GetInputCssClass()}")" name="title" @bind-Value="formData.Title"
-                maxlength="100" />
-            <ValidationMessage For="@(() => formData.Title)" />
+            @if (isEditing)
+            {
+                <InputText class="form-control mt-2" name="title" @bind-Value="formData.Title"
+                    maxlength="100" />
+                <ValidationMessage For="@(() => formData.Title)" />
+            }
+            else
+            {
+                <p class="">@formData.Title</p>
+            }
             <p class="mt-3 mb-2">
                 <NavLink class="btn btn-sm btn-custom">
                     <i class="fa fa-calendar-check-o"></i> Schedules
@@ -28,18 +40,24 @@
             </p>
         </div>
         <div class="card-footer text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success @GetInputCssClass()">
-                <i class="fa fa-save"></i> Update
-            </button>
-            <button type="button" @onclick="CancelEditing" class="btn btn-sm btn-outline-secondary @GetInputCssClass()">
-                <i class="fa fa-ban"></i> Cancel
-            </button>
-            <button type="button" @onclick="@(() => isEditing = true)" class="btn btn-sm btn-outline-secondary @GetLabelCssClass()">
-                <i class="fa fa-pencil"></i> Edit
-            </button>
-            <button type="button" @onclick="HandleDelete" class="btn btn-sm btn-danger @GetLabelCssClass()">
-                <i class="fa fa-times"></i> Remove
-            </button>
+            @if (isEditing)
+            {
+                <button type="submit" class="btn btn-sm btn-outline-success">
+                    <i class="fa fa-save"></i> Update
+                </button>
+                <button type="button" @onclick="CancelEditing" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-ban"></i> Cancel
+                </button>
+            }
+            else
+            {
+                <button type="button" @onclick="@(() => isEditing = true)" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-pencil"></i> Edit
+                </button>
+                <button type="button" @onclick="HandleDelete" class="btn btn-sm btn-danger">
+                    <i class="fa fa-times"></i> Remove
+                </button>
+            }
         </div>
     </EditForm>
 </div>
@@ -49,9 +67,6 @@
     private bool isEditing = false;
     [Parameter]
     public UserModel Item { get; set; }
-
-    private string GetInputCssClass() => isEditing ? "" : "hidden";
-    private string GetLabelCssClass() => isEditing ? "hidden" : "";
 
     private void CancelEditing()
     {

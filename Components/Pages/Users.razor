@@ -7,47 +7,58 @@
 <Toasts Messages="messages" Placement="ToastsPlacement.TopRight" />
 
 <div class="button-group">
-    <button type="button" class="btn btn-sm btn-custom">
-        <i class="fa fa-user-plus"></i> Add
-    </button>
-    <button type="button" class="btn btn-sm btn-danger">
-        <i class="fa fa-ban"></i> Cancel
-    </button>
+    @if (!isAdding)
+    {
+        <button @onclick="ShowNewUser" type="button" class="btn btn-sm btn-custom">
+            <i class="fa fa-user-plus"></i> Add
+        </button>
+    }
+    @if (isAdding)
+    {
+        <button type="button" @onclick="HideNewUser" class="btn btn-sm btn-danger">
+            <i class="fa fa-ban"></i> Cancel
+        </button>
+    }
+
 </div>
 
 @if (isLoading)
 {
-        <div class="text-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+    <div class="text-center">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
+</div>
 }
 else if (users == null || users.Count == 0)
 {
-        <p>No users found.</p>
+    <p>No users found.</p>
 }
 else
 {
-        <div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
-        @errorMessage
-        </div>
-        <div class="row">
+    <div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
+    @errorMessage
+</div>
+    <div class="row">
     @foreach (var user in users)
         {
-                    <div class="col-md-3">
-                        <UserBox Item="user" OnUserUpdated="UserUpdated" OnUserDeleted="UserDeleted" />
-                    </div>
-        }
             <div class="col-md-3">
-                <NewUser />
+                <UserBox Item="user" OnUserUpdated="UserUpdated" OnUserDeleted="UserDeleted" />
             </div>
-        </div>
+        }
+        @if (isAdding)
+        {
+            <div class="col-md-3">
+                <NewUser OnUserAdded="UserAdded" />
+            </div>
+        }
+    </div>
 }
 
 @code
 {
     private bool isLoading = true;
+    private bool isAdding = false;
     private string errorMessage = string.Empty;
     private List<UserModel> users;
     private List<ToastMessage> messages = new List<ToastMessage>();
@@ -66,6 +77,24 @@ else
         finally
         {
             isLoading = false;
+        }
+    }
+
+    private async Task UserAdded(UserModel newUser)
+    {
+        try
+        {
+            var createdUser = await UserService.CreateUserAsync(newUser);
+            users.Add(createdUser);
+            ShowMessage("The user has been created!");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to create user: {ex.Message}";
+        }
+        finally
+        {
+            isAdding = false;
         }
     }
 
@@ -111,4 +140,7 @@ else
             AutoHide = true,
             Message = message
         };
+
+    private void ShowNewUser() => isAdding = true;
+    private void HideNewUser() => isAdding = false;
 }
