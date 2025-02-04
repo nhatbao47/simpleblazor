@@ -19,7 +19,6 @@
             <i class="fa fa-ban"></i> Cancel
         </button>
     }
-
 </div>
 
 @if (isLoading)
@@ -60,7 +59,7 @@ else
     private bool isLoading = true;
     private bool isAdding = false;
     private string errorMessage = string.Empty;
-    private List<UserModel> users;
+    private List<UserModel> users = new List<UserModel>();
     private List<ToastMessage> messages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()

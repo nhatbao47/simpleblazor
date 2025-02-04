@@ -15,6 +15,7 @@ builder.Services.AddBlazorBootstrap();
 builder.Services.AddHttpClient<IApiClient, ApiClient>();
 builder.Services.AddSingleton<TaskService>();
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<ScheduleService>();
 
 var app = builder.Build();
 
