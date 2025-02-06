@@ -1,6 +1,6 @@
 public class ScheduleModel
 {
-    public string Id { get; set; }
+    public int Id { get; set; }
     public string Title { get; set; }
     public int UserId { get; set; }
     public string Creator { get; set; }

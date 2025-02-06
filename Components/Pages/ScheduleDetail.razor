@@ -1,48 +1,67 @@
 @page "/schedules/{Id:int}/detail"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
+@inject ScheduleService ScheduleService
 
 <PageTitle>Schedule Details</PageTitle>
 
+<div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
+    @errorMessage
+</div>
 <div class="card bg-light">
-        <div class="card-header fw-bold">Schedule Details</div>
-        <div class="card-body" v-if="schedule">
-            <div class="row">
-                <label class="col-md-2">Title:</label>
-                <div class="col-md-10">{{ schedule.title }}</div>
+    <div class="card-header fw-bold">Schedule Details</div>
+    <div class="card-body" v-if="schedule">
+        <div class="row">
+            <label class="col-md-2">Title:</label>
+            <div class="col-md-10">@schedule.Title</div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">Creator:</label>
+            <div class="col-md-10">@schedule.Creator</div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">Description:</label>
+            <div class="col-md-10">@schedule.Description</div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">Location:</label>
+            <div class="col-md-10">@schedule.Location</div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">Date time:</label>
+            <div class="col-md-10">
+                @schedule.Date.AsLocalDate() @schedule.StartTime ~ @schedule.EndTime
             </div>
-            <div class="row">
-                <label class="col-md-2">Creator:</label>
-                <div class="col-md-10">{{ schedule.creator }}</div>
-            </div>
-            <div class="row">
-                <label class="col-md-2">Description:</label>
-                <div class="col-md-10">{{ schedule.description }}</div>
-            </div>
-            <div class="row">
-                <label class="col-md-2">Location:</label>
-                <div class="col-md-10">{{ schedule.location }}</div>
-            </div>
-            <div class="row">
-                <label class="col-md-2">Date time:</label>
-                <div class="col-md-10">
-                    {{ $formatDate(schedule.date) }} {{ schedule.startTime }} ~ {{ schedule.endTime }}
-                </div>
-            </div>
-            <div class="row">
-                <label class="col-md-2"></label>
-                <div class="col-md-10">
-                    <button @onclick="GoBack" class="btn btn-sm btn-outline-primary">
-                        <i class="fa fa-arrow-circle-o-left"></i> Back
-                    </button>
-                </div>
+        </div>
+        <div class="row">
+            <label class="col-md-2"></label>
+            <div class="col-md-10">
+                <button @onclick="GoBack" class="btn btn-sm btn-outline-primary">
+                    <i class="fa fa-arrow-circle-o-left"></i> Back
+                </button>
             </div>
         </div>
     </div>
+</div>
 
 @code {
+    private string errorMessage = string.Empty;
+    private ScheduleModel schedule = new ScheduleModel();
+
     [Parameter]
-    public int Id { get;set;}
+    public int Id { get; set; }
 
     private void GoBack() => Navigation.NavigateTo("/schedules");
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            schedule = await ScheduleService.GetScheduleByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load schedule: {ex.Message}";
+        }
+    }
 }

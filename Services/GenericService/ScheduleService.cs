@@ -33,5 +33,22 @@ public class ScheduleService
         }
     }
 
-
+    public async Task<ScheduleModel> GetScheduleByIdAsync(int id)
+    {
+        try
+        {
+            var schedule = await _apiClient.GetByIdAsync<ScheduleModel>(_resource, id);
+            return schedule;
+        }
+        catch (ApplicationException ex)
+        {
+            _logger.LogError(ex, $"Error occurred while fetching schedule with ID {id}.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error occurred while fetching schedule with ID {id}.");
+            throw;
+        }
+    }
 }
