@@ -1,0 +1,9 @@
+<div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(Message) ? "none" : "block");">
+    @Message
+</div>
+
+@code
+{
+    [Parameter]
+    public string Message { get; set; }
+}

@@ -1,24 +1,23 @@
 @page "/schedules"
 @rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
 @inject ScheduleService ScheduleService
 
 <PageTitle>Schedules</PageTitle>
+<ErrorMessage Message="@errorMessage" />
 
 <div class="button-group mb-2">
-    <NavLink href="" class="btn btn-sm btn-custom">
+    <NavLink href="/schedules/0/edit" class="btn btn-sm btn-custom">
         <i class="fa fa-calendar-o"></i> Add
     </NavLink>
     <button class="btn btn-sm btn-outline-secondary">
         <i class="fa fa-eraser"></i> Clear filter
     </button>
 </div>
+
 @if (isLoading)
 {
-    <div class="text-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
+    <LoadingIndicator />
 }
 else if (schedules == null || schedules.Count == 0)
 {
@@ -41,7 +40,7 @@ else
         <tbody>
             @foreach (var schedule in schedules)
             {
-<tr>
+            <tr>
                 <td>@schedule.Title</td>
                 <td>@schedule.Creator</td>
                 <td>@schedule.Description</td>
@@ -55,7 +54,7 @@ else
                     <NavLink href="@($"/schedules/{schedule.Id}/edit")" class="btn btn-sm btn-primary">
                         <i class="fa fa-pencil"></i> Edit
                     </NavLink>
-                    <button type="button" class="btn btn-sm btn-danger">
+                    <button type="button" @onclick="@(() => HandleDelete(schedule))" class="btn btn-sm btn-danger">
                         <i class="fa fa-trash"></i> Delete
                     </button>
                 </td>
@@ -66,10 +65,10 @@ else
     </table>
 }
 
-
 @code
 {
     private bool isLoading = true;
+    private string errorMessage = string.Empty;
     private List<ScheduleModel> schedules = new List<ScheduleModel>();
 
     protected override async Task OnInitializedAsync()
@@ -87,6 +86,30 @@ else
         {
             isLoading = false;
         }
+        StateHasChanged();
     }
 
+    private async Task HandleDelete(ScheduleModel schedule)
+    {
+        try
+        {
+            bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete '{schedule.Title}' schedule?");
+            if (!confirmed)
+            {
+                return;
+            }
+        
+            var isDeleted = await ScheduleService.DeleteScheduleAsync(schedule.Id);
+            if (!isDeleted)
+            {
+                return;
+            }
+
+            schedules = schedules.Where(d => d.Id != schedule.Id).ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to delete schedule: {ex.Message}";
+        }
+    }
 }

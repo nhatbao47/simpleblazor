@@ -6,6 +6,7 @@
 
 <PageTitle>Task Composer</PageTitle>
 
+
 <div class="">
     <p>
         <button type="button" @onclick="GoBack" class="btn btn-sm btn-danger">
@@ -22,11 +23,7 @@
         else
         {
             <EditForm Model="taskModel" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit" FormName="TaskForm">
-                <div class="alert alert-danger" role="alert"
-                    style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
-                    @errorMessage
-                </div>
-
+                <ErrorMessage Message="@errorMessage" />
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 

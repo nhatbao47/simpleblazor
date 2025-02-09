@@ -51,4 +51,58 @@ public class ScheduleService
             throw;
         }
     }
+
+    public async Task<ScheduleModel> CreateScheduleAsync(ScheduleModel newSchedule)
+    {
+        try
+        {
+            return await _apiClient.InsertAsync(_resource, newSchedule);
+        }
+        catch (ApplicationException ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating a new schedule.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while creating a new schedule.");
+            throw;
+        }
+    }
+
+    public async Task<bool> UpdateScheduleAsync(ScheduleModel updatedSchedule)
+    {
+        try
+        {
+            return await _apiClient.UpdateAsync($"{_resource}/{updatedSchedule.Id}", updatedSchedule);
+        }
+        catch (ApplicationException ex)
+        {
+            _logger.LogError(ex, "Error occurred while updating the schedule.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while updating the schedule.");
+            throw;
+        }
+    }
+
+    public async Task<bool> DeleteScheduleAsync(int id)
+    {
+        try
+        {
+            return await _apiClient.DeleteAsync(_resource, id);
+        }
+        catch (ApplicationException ex)
+        {
+            _logger.LogError(ex, $"Error occurred while deleting schedule with ID {id}.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error occurred while schedule task with ID {id}.");
+            throw;
+        }
+    }
 }

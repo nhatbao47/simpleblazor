@@ -3,8 +3,8 @@
 @inject UserService UserService
 
 <PageTitle>Users</PageTitle>
-
 <Toasts Messages="messages" Placement="ToastsPlacement.TopRight" />
+<ErrorMessage Message="@errorMessage" />
 
 <div class="button-group">
     @if (!isAdding)
@@ -35,9 +35,6 @@ else if (users == null || users.Count == 0)
 }
 else
 {
-    <div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
-        @errorMessage
-    </div>
     <div class="row">
         @foreach (var user in users)
         {

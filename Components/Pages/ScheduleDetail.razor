@@ -4,10 +4,8 @@
 @inject ScheduleService ScheduleService
 
 <PageTitle>Schedule Details</PageTitle>
+<ErrorMessage Message="@errorMessage" />
 
-<div class="alert alert-danger" role="alert" style="display: @(string.IsNullOrEmpty(errorMessage) ? "none" : "block");">
-    @errorMessage
-</div>
 <div class="card bg-light">
     <div class="card-header fw-bold">Schedule Details</div>
     <div class="card-body" v-if="schedule">
