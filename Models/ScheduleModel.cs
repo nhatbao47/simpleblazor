@@ -9,7 +9,7 @@ public class ScheduleModel
     public string Title { get; set; }
 
     [Required(ErrorMessage = "Creator is required")]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public string Creator { get; set; }
 

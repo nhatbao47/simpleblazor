@@ -101,3 +101,7 @@ input[type='text'], textarea {
     background-color: inherit;
     border-width: 0;
 }
+
+.validation-message {
+    color: red;
+}

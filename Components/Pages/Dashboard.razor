@@ -6,11 +6,7 @@
 
 @if (isLoading)
 {
-    <div class="text-center">
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div>
+    <LonelySpinner />
 }
 else if (tasks == null || tasks.Count == 0)
 {
@@ -19,16 +15,16 @@ else if (tasks == null || tasks.Count == 0)
 else
 {
     <div class="row">
-    <div class="col-md-4">
-        <NewTasks Tasks="newTasks" />
+        <div class="col-md-4">
+            <NewTasks Tasks="newTasks" />
+        </div>
+        <div class="col-md-4">
+            <InprogressTasks Tasks="inprogressTasks" />
+        </div>
+        <div class="col-md-4">
+            <CompletedTasks Tasks="completedTasks" />
+        </div>
     </div>
-    <div class="col-md-4">
-        <InprogressTasks Tasks="inprogressTasks" />
-    </div>
-    <div class="col-md-4">
-        <CompletedTasks Tasks="completedTasks" />
-    </div>
-</div>
 }
 @code {
     private List<TaskModel> tasks;

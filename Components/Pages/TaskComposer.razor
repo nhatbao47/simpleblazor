@@ -16,9 +16,7 @@
     <div class="border rounded p-2">
         @if (taskModel == null)
         {
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+            <LonelySpinner />
         }
         else
         {
