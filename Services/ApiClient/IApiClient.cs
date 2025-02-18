@@ -9,4 +9,5 @@ public interface IApiClient
     Task<T> InsertAsync<T>(string url, T model);
     Task<bool> UpdateAsync<T>(string url, T model);
     Task<bool> DeleteAsync(string url, int id);
+    Task<LoginResponse> LoginAsync(string url, LoginRequest model);
 }

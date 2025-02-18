@@ -2,23 +2,23 @@ namespace SimpleBlazor.Services.ApiClient;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SimpleBlazor.Services.Configuration;
+using System.Net.Http.Headers;
 
 public class ApiClient: IApiClient 
 {
     private readonly HttpClient _httpClient;
-    private readonly ApiSettings  _apiSettings;
+    private readonly StateContainer _stateContainer;
     
-    public ApiClient(HttpClient httpClient, IOptions<ApiSettings> options)
+    public ApiClient(HttpClient httpClient, StateContainer stateContainer)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        _apiSettings = options?.Value ?? throw new ArgumentNullException(nameof(options));
-        _httpClient.BaseAddress = new Uri(_apiSettings.BaseUrl);
+        _stateContainer = stateContainer ?? throw new ArgumentNullException(nameof(stateContainer));
     }
 
     public async Task<List<T>> GetAllAsync<T>(string url)
     {
+        AddAuthorizationHeader();
+
         try
         {
             var response = await _httpClient.GetAsync(url);
@@ -44,6 +44,8 @@ public class ApiClient: IApiClient
 
     public async Task<T> GetByIdAsync<T>(string url, int id)
     {
+        AddAuthorizationHeader();
+
         try {
             var response = await _httpClient.GetAsync($"{url}/{id}");
             response.EnsureSuccessStatusCode();
@@ -70,6 +72,8 @@ public class ApiClient: IApiClient
 
     public async Task<T> InsertAsync<T>(string url, T model)
     {
+        AddAuthorizationHeader();
+
         try
         {
             var response = await _httpClient.PostAsJsonAsync(url, model);
@@ -84,9 +88,10 @@ public class ApiClient: IApiClient
         }
     }
 
-
     public async Task<bool> UpdateAsync<T>(string url, T model)
     {
+        AddAuthorizationHeader();
+
         try
         {
             var response = await _httpClient.PutAsJsonAsync(url, model);
@@ -102,6 +107,8 @@ public class ApiClient: IApiClient
 
     public async Task<bool> DeleteAsync(string url, int id)
     {
+        AddAuthorizationHeader();
+
         try
         {
             var response = await _httpClient.DeleteAsync($"{url}/{id}");
@@ -112,6 +119,30 @@ public class ApiClient: IApiClient
         {
             Console.Error.WriteLine($"Error in DeleteAsync: {ex.Message}");
             throw;
+        }
+    }
+
+    public async Task<LoginResponse> LoginAsync(string url, LoginRequest model)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync(url, model);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<LoginResponse>()
+                ?? throw new ApplicationException("The response content was empty.");
+        }
+        catch(Exception ex)
+        {
+            Console.Error.WriteLine($"Error in LoginAsync: {ex.Message}");
+            throw;
+        }
+    }
+
+    private void AddAuthorizationHeader()
+    {
+        if (!string.IsNullOrWhiteSpace(_stateContainer.AuthToken))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _stateContainer.AuthToken);
         }
     }
 }

@@ -1,4 +1,5 @@
 @page "/schedules"
+@page "/schedules/{UserId:int?}/user"
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
 @inject ScheduleService ScheduleService
@@ -10,9 +11,12 @@
     <NavLink href="/schedules/0/edit" class="btn btn-sm btn-custom">
         <i class="fa fa-calendar-o"></i> Add
     </NavLink>
-    <button class="btn btn-sm btn-outline-secondary">
-        <i class="fa fa-eraser"></i> Clear filter
-    </button>
+    @if (UserId.HasValue)
+    {
+        <NavLink href="/schedules" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-eraser"></i> Clear filter
+        </NavLink>
+    }
 </div>
 
 @if (isLoading)
@@ -71,11 +75,19 @@ else
     private string errorMessage = string.Empty;
     private List<ScheduleModel> schedules = new List<ScheduleModel>();
 
+    [Parameter]
+    public int? UserId {get;set;}
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             schedules = await ScheduleService.GetSchedulesAsync();
+
+            if (UserId.HasValue)
+            {
+                schedules = schedules.Where(d => d.UserId == UserId.Value).ToList();
+            }
         }
         catch (Exception ex)
         {

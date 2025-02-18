@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using SimpleBlazor.Components;
 using SimpleBlazor.Services.ApiClient;
 using SimpleBlazor.Services.Configuration;
@@ -10,12 +11,19 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-
 builder.Services.AddBlazorBootstrap();
-builder.Services.AddHttpClient<IApiClient, ApiClient>();
+builder.Services.AddSingleton<StateContainer>();
+
+builder.Services.AddHttpClient<IApiClient, ApiClient>((serviceProvider, httpClient) =>
+{
+    var apiSettings = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
+    httpClient.BaseAddress = new Uri(apiSettings.BaseUrl);
+});
+
 builder.Services.AddSingleton<TaskService>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<ScheduleService>();
+builder.Services.AddSingleton<AuthService>();
 
 var app = builder.Build();
 
