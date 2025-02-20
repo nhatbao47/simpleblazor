@@ -53,14 +53,6 @@ steps:
     artifactName: 'drop'
     publishLocation: 'Container'
 
-# - task: AzureWebApp@1
-#   displayName: 'Deploy to Azure Web App'
-#   inputs:
-#     azureSubscription: '$(service_connection)'
-#     appName: '$(blazor_app_name)'
-#     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#     resourceGroupName: '$(resource_group)'
-
 - task: AzureRmWebAppDeployment@4
   displayName: 'Deploy to Azure Web App'
   inputs:
