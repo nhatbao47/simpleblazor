@@ -46,6 +46,11 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
 
+- script: |
+    echo "Listing files in Artifact Staging Directory"
+    ls -al $(Build.ArtifactStagingDirectory)
+  displayName: 'List Files in Artifact Staging Directory'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
