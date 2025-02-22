@@ -47,6 +47,11 @@ steps:
     replaceExistingArchive: true
 
 - script: |
+    echo "Cleaning up s.zip from Artifact Staging Directory"
+    rm -f $(Build.ArtifactStagingDirectory)/s.zip
+  displayName: 'Remove Unwanted s.zip'
+
+- script: |
     echo "Listing files in Artifact Staging Directory"
     ls -al $(Build.ArtifactStagingDirectory)
   displayName: 'List Files in Artifact Staging Directory'
