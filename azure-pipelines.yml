@@ -51,17 +51,17 @@ steps:
     rm -f $(Build.ArtifactStagingDirectory)/s.zip
   displayName: 'Remove Unwanted s.zip'
 
-- script: |
-    echo "Listing files in Artifact Staging Directory"
-    ls -al $(Build.ArtifactStagingDirectory)
-  displayName: 'List Files in Artifact Staging Directory'
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     artifactName: 'drop'
     publishLocation: 'Container'
+
+- script: |
+    echo "Listing files in Artifact Staging Directory"
+    ls -al $(Build.ArtifactStagingDirectory)
+  displayName: 'List Files in Artifact Staging Directory'
 
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
