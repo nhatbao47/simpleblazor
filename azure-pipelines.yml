@@ -68,5 +68,5 @@ steps:
   inputs:
     azureSubscription: '$(service_connection)'
     appName: '$(blazor_app_name)'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    package: '$(Build.ArtifactStagingDirectory)/drop/$(Build.BuildId).zip'
     resourceGroupName: '$(resource_group)'
