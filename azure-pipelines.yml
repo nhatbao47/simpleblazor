@@ -46,11 +46,6 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
 
-- script: |
-    echo "Cleaning up s.zip from Artifact Staging Directory"
-    rm -f $(Build.ArtifactStagingDirectory)/s.zip
-  displayName: 'Remove Unwanted s.zip'
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
@@ -68,5 +63,5 @@ steps:
   inputs:
     azureSubscription: '$(service_connection)'
     appName: '$(blazor_app_name)'
-    package: '$(Build.ArtifactStagingDirectory)/drop/$(Build.BuildId).zip'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     resourceGroupName: '$(resource_group)'
