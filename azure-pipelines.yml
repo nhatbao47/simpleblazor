@@ -62,6 +62,7 @@ steps:
   displayName: 'Deploy to Azure Web App'
   inputs:
     azureSubscription: '$(service_connection)'
+    appType: 'webApp'
     appName: '$(blazor_app_name)'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     resourceGroupName: '$(resource_group)'
