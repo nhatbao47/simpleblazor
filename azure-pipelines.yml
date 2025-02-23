@@ -65,3 +65,5 @@ steps:
     appName: '$(blazor_app_name)'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     resourceGroupName: '$(resource_group)'
+    appSettings: |
+      WEBSITE_RUN_FROM_PACKAGE=0
