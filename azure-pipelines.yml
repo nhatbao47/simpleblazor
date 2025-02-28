@@ -58,23 +58,24 @@ steps:
     ls -al $(Build.ArtifactStagingDirectory)
   displayName: 'List Files in Artifact Staging Directory'
 
-# - task: AzureWebApp@1
-#   displayName: 'Deploy to Azure Web App'
-#   inputs:
-#     azureSubscription: '$(service_connection)'
-#     appType: 'webApp'
-#     appName: '$(blazor_app_name)'
-#     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#     resourceGroupName: '$(resource_group)'
-
-- task: AzureRmWebAppDeployment@4
+- task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
   inputs:
-    ConnectionType: 'AzureRM'
     azureSubscription: '$(service_connection)'
-    WebAppName: '$(blazor_app_name)'
-    ResourceGroupName: '$(resource_group)'
-    Package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    TakeAppOfflineFlag: true
-    EnableCustomDeployment: true
-    DeploymentType: 'zipDeploy'
+    appType: 'webApp'
+    appName: '$(blazor_app_name)'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    resourceGroupName: '$(resource_group)'
+    deploymentMethod: 'zipDeploy'
+
+# - task: AzureRmWebAppDeployment@4
+#   displayName: 'Deploy to Azure Web App'
+#   inputs:
+#     ConnectionType: 'AzureRM'
+#     azureSubscription: '$(service_connection)'
+#     WebAppName: '$(blazor_app_name)'
+#     ResourceGroupName: '$(resource_group)'
+#     Package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     TakeAppOfflineFlag: true
+#     EnableCustomDeployment: true
+#     DeploymentType: 'zipDeploy'
