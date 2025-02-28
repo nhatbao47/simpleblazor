@@ -71,9 +71,9 @@ steps:
   displayName: 'Deploy to Azure Web App'
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: '$(azureSubscription)'
-    WebAppName: '$(appName)'
-    ResourceGroupName: '$(resourceGroupName)'
+    azureSubscription: '$(service_connection)'
+    WebAppName: '$(blazor_app_name)'
+    ResourceGroupName: '$(resource_group)'
     Package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     TakeAppOfflineFlag: true
     EnableCustomDeployment: true
