@@ -58,15 +58,32 @@ steps:
     ls -al $(Build.ArtifactStagingDirectory)
   displayName: 'List Files in Artifact Staging Directory'
 
+- task: ExtractFiles@1
+  displayName: 'Extract Files'
+  inputs:
+    archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    destinationFolder: '$(Build.ArtifactStagingDirectory)/extracted'
+    cleanDestinationFolder: true
+
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
   inputs:
     azureSubscription: '$(service_connection)'
     appType: 'webApp'
     appName: '$(blazor_app_name)'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    package: '$(Build.ArtifactStagingDirectory)/extracted'
     resourceGroupName: '$(resource_group)'
-    deploymentMethod: 'zipDeploy'
+    deploymentMethod: 'runFromPackage'
+
+# - task: AzureWebApp@1
+#   displayName: 'Deploy to Azure Web App'
+#   inputs:
+#     azureSubscription: '$(service_connection)'
+#     appType: 'webApp'
+#     appName: '$(blazor_app_name)'
+#     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     resourceGroupName: '$(resource_group)'
+#     deploymentMethod: 'runFromPackage'
 
 # - task: AzureRmWebAppDeployment@4
 #   displayName: 'Deploy to Azure Web App'
