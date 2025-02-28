@@ -58,11 +58,20 @@ steps:
     ls -al $(Build.ArtifactStagingDirectory)
   displayName: 'List Files in Artifact Staging Directory'
 
-- task: AzureWebApp@1
-  displayName: 'Deploy to Azure Web App'
+# - task: AzureWebApp@1
+#   displayName: 'Deploy to Azure Web App'
+#   inputs:
+#     azureSubscription: '$(service_connection)'
+#     appType: 'webApp'
+#     appName: '$(blazor_app_name)'
+#     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     resourceGroupName: '$(resource_group)'
+
+- task: AzureRMWebAppDeployment@4
   inputs:
+    ConnectionType: 'AzureRM'
     azureSubscription: '$(service_connection)'
     appType: 'webApp'
-    appName: '$(blazor_app_name)'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    resourceGroupName: '$(resource_group)'
+    WebAppName: '$(blazor_app_name)'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    ResourceGroupName: '$(resource_group)'
