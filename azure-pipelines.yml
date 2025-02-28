@@ -67,11 +67,14 @@ steps:
 #     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 #     resourceGroupName: '$(resource_group)'
 
-- task: AzureRMWebAppDeployment@4
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Deploy to Azure Web App'
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: '$(service_connection)'
-    appType: 'webApp'
-    WebAppName: '$(blazor_app_name)'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    ResourceGroupName: '$(resource_group)'
+    azureSubscription: '$(azureSubscription)'
+    WebAppName: '$(appName)'
+    ResourceGroupName: '$(resourceGroupName)'
+    Package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    TakeAppOfflineFlag: true
+    EnableCustomDeployment: true
+    DeploymentType: 'zipDeploy'
