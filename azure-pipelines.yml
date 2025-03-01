@@ -37,6 +37,12 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
+- task: ExtractFiles@1
+  displayName: 'Extract Files'
+  inputs:
+    archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/s.zip'
+    destinationFolder: '$(Build.ArtifactStagingDirectory)'
+
 - script: |
     echo "Listing files in Artifact Staging Directory"
     ls -al $(Build.ArtifactStagingDirectory)
