@@ -37,30 +37,15 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 
-- task: ExtractFiles@1
-  displayName: 'Extract Files'
-  inputs:
-    archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/s.zip'
-    destinationFolder: '$(Build.ArtifactStagingDirectory)'
-
 - script: |
     echo "Listing files in Artifact Staging Directory"
     ls -al $(Build.ArtifactStagingDirectory)
   displayName: 'List Files in Artifact Staging Directory'
 
-- task: ArchiveFiles@2
-  displayName: 'Archive Published Files'
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/s.zip'
     artifactName: 'drop'
     publishLocation: 'Container'
 
@@ -70,6 +55,6 @@ steps:
     azureSubscription: '$(service_connection)'
     appType: 'webApp'
     appName: '$(blazor_app_name)'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    package: '$(Build.ArtifactStagingDirectory)/s.zip'
     resourceGroupName: '$(resource_group)'
     deploymentMethod: 'runFromPackage'
